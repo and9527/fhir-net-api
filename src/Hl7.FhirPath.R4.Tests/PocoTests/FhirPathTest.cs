@@ -311,10 +311,20 @@ namespace Hl7.FhirPath.R4.Tests
 
             var absolutueInvariantcheck = nav.Scalar("Appointment.cancelationReason.exists() implies(Appointment.status = 'no-show' or Appointment.status = 'cancelled')");
             Assert.AreEqual(true, absolutueInvariantcheck);
-            
+
             var invariantcheck = nav.Scalar("cancelationReason.exists() implies(status = 'no-show' or status = 'cancelled')");
             Assert.AreEqual(true, invariantcheck);
 
+        }
+
+        [TestMethod]
+        public void TestSelectNonWhiteSpaceCharacters()
+        {
+            var patient = SourceNode.Resource("Patient", "Patient", SourceNode.Valued("id", "test"));
+            var typedElement = patient.ToTypedElement();
+
+            var success = typedElement.IsBoolean("test.matches('\\S')", true);
+            Assert.IsTrue(success);
         }
     }
 }
